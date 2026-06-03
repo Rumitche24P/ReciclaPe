@@ -1,0 +1,214 @@
+{
+  "info": {
+    "name": "ReciclaPe — API (4697)",
+    "description": "Colección de pruebas REST del proyecto ReciclaPe. Todas las peticiones pasan por el api-gateway (baseUrl). Ejecutar primero 'Auth > Login' para guardar el JWT en la variable {{jwt}}; el resto de peticiones lo usan automáticamente. Usuario de prueba: admin@reciclape.pe / ReciclaPe2026",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "jwt", "value": "", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [ { "key": "token", "value": "{{jwt}}", "type": "string" } ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Registro",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Nuevo\",\n  \"apellidos\": \"Vecino\",\n  \"email\": \"nuevo.vecino@reciclape.pe\",\n  \"password\": \"ReciclaPe2026\",\n  \"telefono\": \"987000111\",\n  \"rol\": \"VECINO\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/registro", "host": ["{{baseUrl}}"], "path": ["api","auth","registro"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res && res.token) {",
+                  "  pm.collectionVariables.set('jwt', res.token);",
+                  "  pm.test('JWT guardado', () => pm.expect(res.token).to.be.a('string'));",
+                  "}",
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@reciclape.pe\",\n  \"password\": \"ReciclaPe2026\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Listar usuarios",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/usuarios", "host": ["{{baseUrl}}"], "path": ["api","usuarios"] } }
+        },
+        {
+          "name": "Obtener usuario por id",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/usuarios/1", "host": ["{{baseUrl}}"], "path": ["api","usuarios","1"] } }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"nombres\": \"Lucía\",\n  \"apellidos\": \"Quispe Ramos\",\n  \"telefono\": \"999888777\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/usuarios/1", "host": ["{{baseUrl}}"], "path": ["api","usuarios","1"] }
+          }
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/usuarios/2", "host": ["{{baseUrl}}"], "path": ["api","usuarios","2"] } }
+        }
+      ]
+    },
+    {
+      "name": "Puntos de Acopio",
+      "item": [
+        {
+          "name": "Listar puntos",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/puntos-acopio", "host": ["{{baseUrl}}"], "path": ["api","puntos-acopio"] } }
+        },
+        {
+          "name": "Crear punto",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"vecinoId\": 1,\n  \"direccion\": \"Av. Pardo 123, Dpto 401\",\n  \"distrito\": \"Miraflores\",\n  \"referencia\": \"Frente al parque\",\n  \"latitud\": -12.1215,\n  \"longitud\": -77.0297\n}" },
+            "url": { "raw": "{{baseUrl}}/api/puntos-acopio", "host": ["{{baseUrl}}"], "path": ["api","puntos-acopio"] }
+          }
+        },
+        {
+          "name": "Actualizar punto",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"direccion\": \"Av. Pardo 123, Dpto 402\",\n  \"distrito\": \"Miraflores\",\n  \"referencia\": \"Frente al parque Kennedy\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/puntos-acopio/1", "host": ["{{baseUrl}}"], "path": ["api","puntos-acopio","1"] }
+          }
+        },
+        {
+          "name": "Eliminar punto",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/puntos-acopio/3", "host": ["{{baseUrl}}"], "path": ["api","puntos-acopio","3"] } }
+        }
+      ]
+    },
+    {
+      "name": "Tipos de Residuo",
+      "item": [
+        {
+          "name": "Listar tipos",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tipos-residuo", "host": ["{{baseUrl}}"], "path": ["api","tipos-residuo"] } }
+        },
+        {
+          "name": "Crear tipo",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Tetrapak\",\n  \"descripcion\": \"Envases multicapa\",\n  \"factorCo2Kg\": 1.100,\n  \"precioKg\": 0.30\n}" },
+            "url": { "raw": "{{baseUrl}}/api/tipos-residuo", "host": ["{{baseUrl}}"], "path": ["api","tipos-residuo"] }
+          }
+        },
+        {
+          "name": "Actualizar tipo",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Plástico PET\",\n  \"descripcion\": \"Botellas PET transparentes\",\n  \"factorCo2Kg\": 1.500,\n  \"precioKg\": 0.85\n}" },
+            "url": { "raw": "{{baseUrl}}/api/tipos-residuo/3", "host": ["{{baseUrl}}"], "path": ["api","tipos-residuo","3"] }
+          }
+        },
+        {
+          "name": "Eliminar tipo",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/tipos-residuo/5", "host": ["{{baseUrl}}"], "path": ["api","tipos-residuo","5"] } }
+        }
+      ]
+    },
+    {
+      "name": "Recojos",
+      "item": [
+        {
+          "name": "Listar recojos (por estado)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/recojos?estado=SOLICITADO", "host": ["{{baseUrl}}"], "path": ["api","recojos"], "query": [ { "key": "estado", "value": "SOLICITADO" } ] } }
+        },
+        {
+          "name": "Obtener recojo por id",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/recojos/1", "host": ["{{baseUrl}}"], "path": ["api","recojos","1"] } }
+        },
+        {
+          "name": "Solicitar recojo",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"puntoAcopioId\": 1,\n  \"vecinoId\": 1,\n  \"observacion\": \"Tengo cartón y botellas\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/recojos", "host": ["{{baseUrl}}"], "path": ["api","recojos"] }
+          }
+        },
+        {
+          "name": "Aceptar recojo",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"recicladorId\": 3\n}" },
+            "url": { "raw": "{{baseUrl}}/api/recojos/3/aceptar", "host": ["{{baseUrl}}"], "path": ["api","recojos","3","aceptar"] }
+          }
+        },
+        {
+          "name": "Completar recojo",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"detalles\": [\n    { \"tipoResiduoId\": 1, \"kilogramos\": 4.5 },\n    { \"tipoResiduoId\": 3, \"kilogramos\": 2.0 }\n  ]\n}" },
+            "url": { "raw": "{{baseUrl}}/api/recojos/3/completar", "host": ["{{baseUrl}}"], "path": ["api","recojos","3","completar"] }
+          }
+        },
+        {
+          "name": "Cancelar recojo",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{baseUrl}}/api/recojos/3/cancelar", "host": ["{{baseUrl}}"], "path": ["api","recojos","3","cancelar"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reportes",
+      "item": [
+        {
+          "name": "Impacto distrital",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/reportes/impacto-distrital", "host": ["{{baseUrl}}"], "path": ["api","reportes","impacto-distrital"] } }
+        },
+        {
+          "name": "Impacto del vecino",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/reportes/impacto-vecino/1", "host": ["{{baseUrl}}"], "path": ["api","reportes","impacto-vecino","1"] } }
+        },
+        {
+          "name": "Ranking de tipos",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/reportes/ranking-tipos", "host": ["{{baseUrl}}"], "path": ["api","reportes","ranking-tipos"] } }
+        }
+      ]
+    }
+  ]
+}

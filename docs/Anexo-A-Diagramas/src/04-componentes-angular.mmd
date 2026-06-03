@@ -1,0 +1,67 @@
+graph TB
+    APP["AppComponent<br/>(router-outlet)"]
+
+    subgraph CORE["CoreModule / providers"]
+        AUTHSVC["AuthService"]
+        TOKEN["TokenService<br/>(localStorage JWT)"]
+        JWTINT["jwtInterceptor"]
+        ERRINT["errorInterceptor"]
+        AUTHGUARD["authGuard"]
+        ROLEGUARD["roleGuard"]
+        APISVC["ApiService (HttpClient)"]
+    end
+
+    subgraph SHARED["SharedModule"]
+        UICOMP["Componentes UI<br/>(navbar, cards, tablas)"]
+        CHART["ImpactoChartComponent<br/>(ngx-charts)"]
+    end
+
+    subgraph AUTHF["auth (lazy)"]
+        LOGIN["LoginComponent"]
+        REGISTRO["RegistroComponent"]
+    end
+
+    subgraph VECINO["vecino (lazy)"]
+        VDASH["DashboardVecino"]
+        PUNTOS["PuntosAcopioComponent (CRUD)"]
+        SOLICITUD["SolicitarRecojoComponent"]
+        VHIST["HistorialVecino"]
+    end
+
+    subgraph RECIC["reciclador (lazy)"]
+        RDISP["RecojosDisponibles"]
+        RGEST["GestionRecojoComponent"]
+        RHIST["HistorialReciclador"]
+    end
+
+    subgraph ADMIN["admin (lazy)"]
+        USUARIOS["GestionUsuarios"]
+        TIPOS["GestionTiposResiduo (CRUD)"]
+        REPORTES["ReportesDistritales"]
+    end
+
+    APP --> AUTHF
+    APP --> VECINO
+    APP --> RECIC
+    APP --> ADMIN
+    APP --> CORE
+    APP --> SHARED
+
+    AUTHF --> AUTHSVC
+    VECINO --> APISVC
+    RECIC --> APISVC
+    ADMIN --> APISVC
+    AUTHSVC --> TOKEN
+    JWTINT --> TOKEN
+    VECINO -. usa .-> CHART
+    ADMIN -. usa .-> CHART
+    VECINO -. protegido .-> ROLEGUARD
+    RECIC -. protegido .-> ROLEGUARD
+    ADMIN -. protegido .-> ROLEGUARD
+
+    classDef core fill:#E3F2FD,stroke:#1565C0,color:#0D47A1;
+    classDef feat fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
+    classDef shared fill:#FFF3E0,stroke:#E65100,color:#E65100;
+    class AUTHSVC,TOKEN,JWTINT,ERRINT,AUTHGUARD,ROLEGUARD,APISVC core;
+    class LOGIN,REGISTRO,VDASH,PUNTOS,SOLICITUD,VHIST,RDISP,RGEST,RHIST,USUARIOS,TIPOS,REPORTES feat;
+    class UICOMP,CHART shared;

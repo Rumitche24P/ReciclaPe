@@ -1,0 +1,39 @@
+graph LR
+    GW["api-gateway<br/>:8080"]
+
+    GW --> AUTH["auth-service"]
+    GW --> RECOJO["recojo-service"]
+    GW --> REPORTE["reporte-service"]
+
+    AUTH --> A1["POST /api/auth/registro"]
+    AUTH --> A2["POST /api/auth/login"]
+    AUTH --> A3["GET /api/usuarios"]
+    AUTH --> A4["GET /api/usuarios/{id}"]
+    AUTH --> A5["PUT /api/usuarios/{id}"]
+    AUTH --> A6["DELETE /api/usuarios/{id}"]
+
+    RECOJO --> P1["GET /api/puntos-acopio"]
+    RECOJO --> P2["POST /api/puntos-acopio"]
+    RECOJO --> P3["PUT /api/puntos-acopio/{id}"]
+    RECOJO --> P4["DELETE /api/puntos-acopio/{id}"]
+    RECOJO --> T1["GET /api/tipos-residuo"]
+    RECOJO --> T2["POST /api/tipos-residuo"]
+    RECOJO --> T3["PUT /api/tipos-residuo/{id}"]
+    RECOJO --> T4["DELETE /api/tipos-residuo/{id}"]
+    RECOJO --> R1["GET /api/recojos"]
+    RECOJO --> R2["POST /api/recojos"]
+    RECOJO --> R3["PUT /api/recojos/{id}/aceptar"]
+    RECOJO --> R4["PUT /api/recojos/{id}/completar"]
+    RECOJO --> R5["PUT /api/recojos/{id}/cancelar"]
+    RECOJO --> R6["GET /api/recojos/{id}"]
+
+    REPORTE --> E1["GET /api/reportes/impacto-distrital"]
+    REPORTE --> E2["GET /api/reportes/impacto-vecino/{id}"]
+    REPORTE --> E3["GET /api/reportes/ranking-tipos"]
+
+    classDef gw fill:#E3F2FD,stroke:#1565C0,color:#0D47A1;
+    classDef svc fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
+    classDef ep fill:#FFFFFF,stroke:#90A4AE,color:#37474F;
+    class GW gw;
+    class AUTH,RECOJO,REPORTE svc;
+    class A1,A2,A3,A4,A5,A6,P1,P2,P3,P4,T1,T2,T3,T4,R1,R2,R3,R4,R5,R6,E1,E2,E3 ep;

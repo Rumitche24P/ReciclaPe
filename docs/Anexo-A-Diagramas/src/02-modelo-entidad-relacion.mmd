@@ -1,0 +1,59 @@
+erDiagram
+    ROL ||--o{ USUARIO : "clasifica"
+    USUARIO ||--o{ PUNTO_ACOPIO : "registra (vecino)"
+    USUARIO ||--o{ RECOJO : "solicita (vecino)"
+    USUARIO ||--o{ RECOJO : "atiende (reciclador)"
+    PUNTO_ACOPIO ||--o{ RECOJO : "ubica"
+    RECOJO ||--|{ DETALLE_RECOJO : "contiene"
+    TIPO_RESIDUO ||--o{ DETALLE_RECOJO : "clasifica"
+
+    ROL {
+        bigint id PK
+        varchar nombre "VECINO / RECICLADOR / ADMIN"
+    }
+    USUARIO {
+        bigint id PK
+        varchar nombres
+        varchar apellidos
+        varchar email UK
+        varchar password_hash "BCrypt"
+        varchar telefono
+        bigint rol_id FK
+        boolean activo
+        timestamp creado_en
+    }
+    PUNTO_ACOPIO {
+        bigint id PK
+        bigint vecino_id "ref logica auth_db"
+        varchar direccion
+        varchar distrito
+        varchar referencia
+        decimal latitud
+        decimal longitud
+        boolean activo
+    }
+    TIPO_RESIDUO {
+        bigint id PK
+        varchar nombre "Papel, Plastico PET..."
+        varchar descripcion
+        decimal factor_co2_kg "kg CO2 evitado / kg"
+        decimal precio_kg
+        boolean activo
+    }
+    RECOJO {
+        bigint id PK
+        bigint punto_acopio_id FK
+        bigint vecino_id "ref logica auth_db"
+        bigint reciclador_id "ref logica auth_db"
+        varchar estado "SOLICITADO/ACEPTADO/COMPLETADO/CANCELADO"
+        timestamp fecha_solicitud
+        timestamp fecha_recojo
+        varchar observacion
+    }
+    DETALLE_RECOJO {
+        bigint id PK
+        bigint recojo_id FK
+        bigint tipo_residuo_id FK
+        decimal kilogramos
+        decimal co2_evitado
+    }

@@ -1,0 +1,14 @@
+{
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Segoe UI, Arial, sans-serif",
+    "fontSize": "16px",
+    "primaryColor": "#E8F5E9",
+    "primaryBorderColor": "#2E7D32",
+    "primaryTextColor": "#1B5E20",
+    "lineColor": "#558B2F",
+    "secondaryColor": "#FFF3E0",
+    "tertiaryColor": "#E3F2FD"
+  },
+  "flowchart": { "htmlLabels": true, "curve": "basis" }
+}

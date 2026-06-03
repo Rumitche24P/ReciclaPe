@@ -1,0 +1,45 @@
+graph LR
+    V(["fa:fa-user Vecino"])
+    R(["fa:fa-user Reciclador"])
+    A(["fa:fa-user Administrador Municipal"])
+
+    subgraph SIS["Sistema ReciclaPe"]
+        direction TB
+        UC1(["Registrarse / Iniciar sesion"])
+        UC2(["Gestionar puntos de acopio (CRUD)"])
+        UC3(["Solicitar recojo"])
+        UC4(["Cancelar recojo"])
+        UC5(["Consultar historial de recojos"])
+        UC6(["Ver dashboard de impacto personal"])
+        UC7(["Consultar recojos disponibles"])
+        UC8(["Aceptar recojo"])
+        UC9(["Completar recojo y registrar kilogramos"])
+        UC10(["Ver ingresos estimados"])
+        UC11(["Gestionar usuarios"])
+        UC12(["Gestionar tipos de residuo (CRUD)"])
+        UC13(["Generar reportes distritales"])
+        UC14(["Ver dashboard de impacto agregado"])
+    end
+
+    V --- UC1
+    V --- UC2
+    V --- UC3
+    V --- UC4
+    V --- UC5
+    V --- UC6
+
+    R --- UC1
+    R --- UC7
+    R --- UC8
+    R --- UC9
+    R --- UC5
+    R --- UC10
+
+    A --- UC1
+    A --- UC11
+    A --- UC12
+    A --- UC13
+    A --- UC14
+
+    classDef actor fill:#FFF3E0,stroke:#E65100,stroke-width:2px,color:#E65100;
+    class V,R,A actor;

@@ -1,0 +1,62 @@
+graph TB
+    Cliente["fa:fa-window-maximize Frontend Angular SPA<br/>(Vecino / Reciclador / Admin)"]
+
+    subgraph EDGE["Capa de borde"]
+        GW["api-gateway<br/>Spring Cloud Gateway<br/>(valida JWT, rutea)"]
+    end
+
+    subgraph DISCOVERY["Service Discovery"]
+        EUREKA["eureka-server<br/>Spring Cloud Netflix Eureka"]
+    end
+
+    subgraph SERVICES["Microservicios de negocio"]
+        AUTH["auth-service<br/>Spring Security + JWT + BCrypt"]
+        RECOJO["recojo-service<br/>Spring Data JPA"]
+        REPORTE["reporte-service<br/>Feign + Resilience4J"]
+    end
+
+    subgraph MSG["Mensajeria"]
+        RABBIT["RabbitMQ<br/>evento RecojoCompletado"]
+    end
+
+    subgraph DATA["Persistencia"]
+        AUTHDB[("auth_db<br/>PostgreSQL")]
+        RECOJODB[("recojo_db<br/>PostgreSQL")]
+    end
+
+    subgraph OBS["Observabilidad"]
+        PROM["Prometheus"]
+        GRAF["Grafana"]
+    end
+
+    Cliente -->|HTTPS / JWT| GW
+    GW -->|/api/auth/**| AUTH
+    GW -->|/api/puntos, /api/recojos, /api/tipos-residuo| RECOJO
+    GW -->|/api/reportes/**| REPORTE
+
+    GW -. registro .-> EUREKA
+    AUTH -. registro .-> EUREKA
+    RECOJO -. registro .-> EUREKA
+    REPORTE -. registro .-> EUREKA
+
+    REPORTE -->|Feign + Circuit Breaker| RECOJO
+    RECOJO -->|publica| RABBIT
+    RABBIT -->|consume| REPORTE
+
+    AUTH --> AUTHDB
+    RECOJO --> RECOJODB
+
+    AUTH -. /actuator/prometheus .-> PROM
+    RECOJO -. /actuator/prometheus .-> PROM
+    REPORTE -. /actuator/prometheus .-> PROM
+    GW -. /actuator/prometheus .-> PROM
+    PROM --> GRAF
+
+    classDef edge fill:#E3F2FD,stroke:#1565C0,color:#0D47A1;
+    classDef svc fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
+    classDef data fill:#FFF8E1,stroke:#F9A825,color:#F57F17;
+    classDef obs fill:#F3E5F5,stroke:#6A1B9A,color:#4A148C;
+    class GW edge;
+    class AUTH,RECOJO,REPORTE,EUREKA svc;
+    class AUTHDB,RECOJODB,RABBIT data;
+    class PROM,GRAF obs;

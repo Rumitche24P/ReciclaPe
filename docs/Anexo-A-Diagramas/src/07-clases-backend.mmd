@@ -1,0 +1,101 @@
+classDiagram
+    direction LR
+
+    class Usuario {
+        +Long id
+        +String nombres
+        +String apellidos
+        +String email
+        +String passwordHash
+        +Rol rol
+        +boolean activo
+    }
+    class Rol {
+        +Long id
+        +String nombre
+    }
+    class AuthController {
+        +registro(RegistroDTO) ResponseEntity
+        +login(LoginDTO) ResponseEntity~TokenDTO~
+    }
+    class AuthService {
+        +registrar(RegistroDTO) UsuarioDTO
+        +autenticar(LoginDTO) TokenDTO
+    }
+    class JwtService {
+        +generarToken(Usuario) String
+        +validarToken(String) boolean
+    }
+    class UsuarioRepository {
+        <<interface>>
+        +findByEmail(String) Optional~Usuario~
+    }
+
+    AuthController --> AuthService
+    AuthService --> JwtService
+    AuthService --> UsuarioRepository
+    AuthService ..> BCryptPasswordEncoder
+    UsuarioRepository --> Usuario
+    Usuario --> Rol
+
+    class PuntoAcopio {
+        +Long id
+        +Long vecinoId
+        +String direccion
+        +String distrito
+        +boolean activo
+    }
+    class TipoResiduo {
+        +Long id
+        +String nombre
+        +BigDecimal factorCo2Kg
+        +BigDecimal precioKg
+    }
+    class Recojo {
+        +Long id
+        +Long puntoAcopioId
+        +Long vecinoId
+        +Long recicladorId
+        +EstadoRecojo estado
+        +LocalDateTime fechaSolicitud
+        +List~DetalleRecojo~ detalles
+    }
+    class DetalleRecojo {
+        +Long id
+        +TipoResiduo tipoResiduo
+        +BigDecimal kilogramos
+        +BigDecimal co2Evitado
+    }
+    class RecojoController {
+        +crear(RecojoCrearDTO)
+        +listar(estado)
+        +aceptar(id)
+        +completar(id, DetalleDTO[])
+        +cancelar(id)
+    }
+    class RecojoService {
+        +crear(RecojoCrearDTO) RecojoResponseDTO
+        +completar(id, detalles) RecojoResponseDTO
+    }
+
+    RecojoController --> RecojoService
+    RecojoService --> Recojo
+    Recojo "1" --> "*" DetalleRecojo
+    DetalleRecojo --> TipoResiduo
+    Recojo --> PuntoAcopio
+
+    class ReporteController {
+        +impactoDistrital() ReporteDTO
+    }
+    class ReporteService {
+        +calcularImpacto() ReporteDTO
+        +onRecojoCompletado(evento)
+    }
+    class RecojoFeignClient {
+        <<interface>>
+        +obtenerRecojosCompletados() List
+    }
+
+    ReporteController --> ReporteService
+    ReporteService --> RecojoFeignClient
+    ReporteService ..> Resilience4J : circuit breaker

@@ -1,0 +1,58 @@
+graph TB
+    subgraph HOST["Host de desarrollo - Docker Compose (red: reciclape-net)"]
+        subgraph FRONT["Contenedor: frontend"]
+            NG["Angular + Nginx<br/>puerto 4200"]
+        end
+        subgraph GWC["Contenedor: api-gateway"]
+            GW["Spring Cloud Gateway<br/>puerto 8080"]
+        end
+        subgraph EUC["Contenedor: eureka-server"]
+            EU["Eureka<br/>puerto 8761"]
+        end
+        subgraph AUC["Contenedor: auth-service"]
+            AU["puerto 8081"]
+        end
+        subgraph REC["Contenedor: recojo-service"]
+            RE["puerto 8082"]
+        end
+        subgraph REP["Contenedor: reporte-service"]
+            RP["puerto 8083"]
+        end
+        subgraph PGC["Contenedor: postgres"]
+            PG[("auth_db / recojo_db<br/>puerto 5432")]
+        end
+        subgraph MQC["Contenedor: rabbitmq"]
+            MQ["RabbitMQ<br/>5672 / 15672"]
+        end
+        subgraph PRC["Contenedor: prometheus"]
+            PR["puerto 9090"]
+        end
+        subgraph GRC["Contenedor: grafana"]
+            GR["puerto 3000"]
+        end
+    end
+
+    Browser["fa:fa-laptop Navegador del usuario"] -->|4200| NG
+    NG -->|8080| GW
+    GW --> AU
+    GW --> RE
+    GW --> RP
+    AU --> PG
+    RE --> PG
+    RE --> MQ
+    MQ --> RP
+    RP --> RE
+    GW -.-> EU
+    AU -.-> EU
+    RE -.-> EU
+    RP -.-> EU
+    PR -.scrape /actuator/prometheus.-> GW
+    PR -.-> AU
+    PR -.-> RE
+    PR -.-> RP
+    GR -->|datasource| PR
+
+    classDef c fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20;
+    classDef d fill:#FFF8E1,stroke:#F9A825,color:#F57F17;
+    class NG,GW,EU,AU,RE,RP c;
+    class PG,MQ,PR,GR d;

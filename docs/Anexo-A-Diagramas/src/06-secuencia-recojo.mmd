@@ -1,0 +1,37 @@
+sequenceDiagram
+    autonumber
+    actor V as Vecino
+    actor R as Reciclador
+    participant FE as Frontend Angular
+    participant GW as api-gateway
+    participant RS as recojo-service
+    participant MQ as RabbitMQ
+    participant RP as reporte-service
+    participant DB as recojo_db
+
+    V->>FE: Solicita recojo en un punto de acopio
+    FE->>GW: POST /api/recojos (Bearer JWT)
+    GW->>RS: Crea recojo (estado=SOLICITADO)
+    RS->>DB: INSERT recojo
+    RS-->>FE: 201 Created {recojoId}
+
+    R->>FE: Consulta recojos disponibles
+    FE->>GW: GET /api/recojos?estado=SOLICITADO
+    GW->>RS: Lista recojos
+    RS-->>FE: 200 OK [recojos]
+
+    R->>FE: Acepta recojo
+    FE->>GW: PUT /api/recojos/{id}/aceptar
+    GW->>RS: estado=ACEPTADO, reciclador_id
+    RS->>DB: UPDATE recojo
+
+    R->>FE: Completa recojo y registra kilogramos por tipo
+    FE->>GW: PUT /api/recojos/{id}/completar {detalles[]}
+    GW->>RS: Registra detalles y calcula co2_evitado
+    RS->>DB: UPDATE recojo (COMPLETADO) + INSERT detalles
+    RS->>MQ: publica evento RecojoCompletado
+    RS-->>FE: 200 OK
+
+    MQ-->>RP: entrega evento RecojoCompletado
+    RP->>RP: Recalcula KPIs de impacto (kg, CO2)
+    Note over RP,RS: Para reportes en linea, reporte-service tambien<br/>consulta recojo-service via Feign con Resilience4J<br/>(circuit breaker ante fallos).

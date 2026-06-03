@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor U as Usuario
+    participant FE as Frontend Angular
+    participant GW as api-gateway
+    participant AU as auth-service
+    participant DB as auth_db (PostgreSQL)
+
+    U->>FE: Ingresa email y password
+    FE->>GW: POST /api/auth/login {email, password}
+    GW->>AU: Reenvia peticion (ruta /api/auth/**)
+    AU->>DB: SELECT usuario WHERE email = ?
+    DB-->>AU: Usuario (password_hash BCrypt)
+    AU->>AU: BCryptPasswordEncoder.matches(password, hash)
+    alt Credenciales validas
+        AU->>AU: Genera JWT firmado (claims: sub, rol, exp)
+        AU-->>GW: 200 OK {token, rol, nombres}
+        GW-->>FE: 200 OK {token, rol}
+        FE->>FE: Guarda JWT en localStorage
+        FE-->>U: Redirige al dashboard segun rol
+    else Credenciales invalidas
+        AU-->>GW: 401 Unauthorized
+        GW-->>FE: 401 Unauthorized
+        FE-->>U: Muestra "Credenciales incorrectas"
+    end
+
+    Note over FE,GW: En peticiones siguientes el jwtInterceptor<br/>agrega "Authorization: Bearer <token>".<br/>El gateway valida la firma del JWT antes de rutear.
