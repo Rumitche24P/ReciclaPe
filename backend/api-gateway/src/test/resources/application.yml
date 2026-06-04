@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: api-gateway
+
+jwt:
+  secret: clave-de-prueba-jwt-para-tests-unitarios-reciclape-cibertec-2026
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false

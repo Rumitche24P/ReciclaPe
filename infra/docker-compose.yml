@@ -1,0 +1,156 @@
+# ReciclaPe - stack completo. Ejecutar desde infra/ con:  docker compose up --build
+# (los contextos de build apuntan a ../backend y ../frontend)
+
+services:
+  # ---------------- Infraestructura ----------------
+  postgres:
+    image: postgres:16
+    container_name: reciclape-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [reciclape-net]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: reciclape-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [reciclape-net]
+
+  # ---------------- Service discovery ----------------
+  eureka-server:
+    build:
+      context: ../backend
+      dockerfile: eureka-server/Dockerfile
+    container_name: reciclape-eureka
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8761/actuator/health | grep -q UP || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    networks: [reciclape-net]
+
+  # ---------------- Microservicios ----------------
+  auth-service:
+    build:
+      context: ../backend
+      dockerfile: auth-service/Dockerfile
+    container_name: reciclape-auth
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      EUREKA_URL: http://eureka-server:8761/eureka
+      JWT_SECRET: reciclape-clave-secreta-jwt-cambiar-en-produccion-2026-cibertec
+    depends_on:
+      postgres: { condition: service_healthy }
+      eureka-server: { condition: service_started }
+    networks: [reciclape-net]
+
+  recojo-service:
+    build:
+      context: ../backend
+      dockerfile: recojo-service/Dockerfile
+    container_name: reciclape-recojo
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      RABBITMQ_HOST: rabbitmq
+      EUREKA_URL: http://eureka-server:8761/eureka
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+      eureka-server: { condition: service_started }
+    networks: [reciclape-net]
+
+  reporte-service:
+    build:
+      context: ../backend
+      dockerfile: reporte-service/Dockerfile
+    container_name: reciclape-reporte
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      RABBITMQ_HOST: rabbitmq
+      EUREKA_URL: http://eureka-server:8761/eureka
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+      eureka-server: { condition: service_started }
+    networks: [reciclape-net]
+
+  api-gateway:
+    build:
+      context: ../backend
+      dockerfile: api-gateway/Dockerfile
+    container_name: reciclape-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_URL: http://eureka-server:8761/eureka
+      JWT_SECRET: reciclape-clave-secreta-jwt-cambiar-en-produccion-2026-cibertec
+      CORS_ORIGINS: http://localhost:4200
+    depends_on:
+      eureka-server: { condition: service_started }
+    networks: [reciclape-net]
+
+  # ---------------- Frontend ----------------
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: reciclape-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api-gateway
+    networks: [reciclape-net]
+
+  # ---------------- Observabilidad ----------------
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: reciclape-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks: [reciclape-net]
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: reciclape-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    depends_on:
+      - prometheus
+    networks: [reciclape-net]
+
+volumes:
+  pgdata:
+
+networks:
+  reciclape-net:
+    driver: bridge
