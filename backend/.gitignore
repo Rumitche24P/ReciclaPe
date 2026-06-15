@@ -37,3 +37,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Volcados de error de la JVM ###
+hs_err_pid*.log
+replay_pid*.log
