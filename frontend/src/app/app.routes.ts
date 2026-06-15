@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard, roleGuard } from './core/guards';
 
 export const routes: Routes = [
+  // Landing pública (solo coincide con la ruta exacta '/')
+  { path: '', pathMatch: 'full', loadComponent: () => import('./core/home.component').then((m) => m.HomeComponent) },
   { path: 'login', loadComponent: () => import('./auth/login.component').then((m) => m.LoginComponent) },
   { path: 'registro', loadComponent: () => import('./auth/register.component').then((m) => m.RegisterComponent) },
   {
@@ -9,8 +11,6 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
     canActivate: [authGuard],
     children: [
-      { path: '', pathMatch: 'full', loadComponent: () => import('./core/inicio.component').then((m) => m.InicioComponent) },
-
       // ---- Vecino ----
       {
         path: 'vecino',

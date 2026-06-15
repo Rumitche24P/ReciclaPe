@@ -1,92 +1,203 @@
+/* ===========================================================================
+   ReciclaPe — Sistema de diseño
+   Identidad: eco editorial, cálida y con carácter (no genérica).
+   Tipografía: Sora (titulares) + Plus Jakarta Sans (texto).
+   =========================================================================== */
+
 :root {
-  --verde: #2e7d32;
-  --verde-osc: #1b5e20;
-  --verde-claro: #e8f5e9;
-  --gris: #455a64;
-  --gris-claro: #f4f6f8;
-  --borde: #e0e0e0;
-  --rojo: #c62828;
-  --naranja: #ef6c00;
-  --radius: 10px;
-  --sombra: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+  /* --- Paleta base --- */
+  --ink: #11271b;          /* texto principal (verde casi negro) */
+  --ink-soft: #4a6152;     /* texto secundario */
+  --forest: #0e5c30;       /* primario */
+  --forest-700: #0a4626;
+  --forest-300: #2f9c5c;
+  --leaf: #7dd957;         /* acento vivo */
+  --leaf-700: #5fb53e;
+  --leaf-soft: #eaf7dd;
+  --mint: #e4f1e8;         /* fondo verde tenue */
+  --sand: #f4f2ea;         /* fondo cálido de página */
+  --cream: #fbfaf4;
+  --surface: #ffffff;
+  --line: #e6e8e0;
+  --rojo: #c0392b;
+  --naranja: #d97706;
+  --azul: #1d6fb8;
+
+  /* --- Compatibilidad con clases existentes --- */
+  --verde: var(--forest);
+  --verde-osc: var(--forest-700);
+  --verde-claro: var(--mint);
+  --gris: var(--ink-soft);
+  --gris-claro: var(--sand);
+  --borde: var(--line);
+
+  /* --- Forma y profundidad --- */
+  --r-sm: 10px;
+  --r: 16px;
+  --r-lg: 24px;
+  --radius: var(--r);
+  --sh-sm: 0 1px 2px rgba(16, 50, 30, 0.06);
+  --sh: 0 6px 20px -8px rgba(16, 50, 30, 0.18), 0 2px 6px rgba(16, 50, 30, 0.05);
+  --sh-lg: 0 24px 50px -20px rgba(16, 50, 30, 0.30);
+  --sombra: var(--sh);
+
+  --font-head: "Sora", "Segoe UI", sans-serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
   margin: 0;
-  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: var(--gris-claro);
-  color: #1f2937;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--sand);
+  /* textura sutil de fondo */
+  background-image:
+    radial-gradient(circle at 12% -10%, rgba(125, 217, 87, 0.16), transparent 38%),
+    radial-gradient(circle at 100% 0%, rgba(14, 92, 48, 0.10), transparent 30%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
 }
 
-a { color: var(--verde); text-decoration: none; }
-h1, h2, h3 { color: var(--verde-osc); margin: 0 0 0.5rem; }
+a { color: var(--forest); text-decoration: none; }
+a:hover { color: var(--forest-700); }
 
-.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+h1 { font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem); font-weight: 800; }
+h2 { font-size: 1.5rem; font-weight: 700; }
+h3 { font-size: 1.15rem; font-weight: 700; }
 
+.container { max-width: 1120px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* Etiqueta "eyebrow" para secciones */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-head); font-weight: 700; font-size: 0.72rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--forest-300);
+}
+
+/* --- Tarjetas --- */
 .card {
-  background: #fff;
-  border: 1px solid var(--borde);
-  border-radius: var(--radius);
-  box-shadow: var(--sombra);
-  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--sh);
+  padding: 1.5rem;
   margin-bottom: 1.25rem;
 }
 
+/* --- Botones --- */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: var(--verde);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 0.55rem 1rem;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+  background: linear-gradient(135deg, var(--forest-300), var(--forest));
+  color: #fff; border: none; border-radius: 999px;
+  padding: 0.7rem 1.4rem; font-family: var(--font-head);
+  font-size: 0.92rem; font-weight: 600; cursor: pointer;
+  box-shadow: 0 8px 18px -8px rgba(14, 92, 48, 0.7);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
 }
-.btn:hover { background: var(--verde-osc); }
-.btn:disabled { background: #a5d6a7; cursor: not-allowed; }
-.btn-sec { background: #fff; color: var(--verde); border: 1px solid var(--verde); }
-.btn-sec:hover { background: var(--verde-claro); }
-.btn-danger { background: var(--rojo); }
-.btn-danger:hover { background: #8e0000; }
-.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.82rem; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -10px rgba(14, 92, 48, 0.75); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { background: #b9d6c3; box-shadow: none; cursor: not-allowed; transform: none; }
 
-label { display: block; font-size: 0.85rem; color: var(--gris); margin: 0.6rem 0 0.2rem; }
+.btn-accent { background: linear-gradient(135deg, var(--leaf), var(--leaf-700)); color: var(--forest-700); box-shadow: 0 8px 18px -8px rgba(95, 181, 62, 0.7); }
+.btn-sec { background: #fff; color: var(--forest); border: 1.5px solid var(--line); box-shadow: var(--sh-sm); }
+.btn-sec:hover { border-color: var(--forest-300); background: var(--cream); }
+.btn-danger { background: linear-gradient(135deg, #e05d4f, var(--rojo)); box-shadow: 0 8px 18px -8px rgba(192, 57, 43, 0.6); }
+.btn-ghost { background: transparent; color: var(--ink); box-shadow: none; }
+.btn-ghost:hover { background: var(--mint); transform: none; }
+.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
+
+/* --- Formularios --- */
+label {
+  display: block; font-family: var(--font-head);
+  font-size: 0.8rem; font-weight: 600; color: var(--ink-soft);
+  margin: 0.7rem 0 0.3rem;
+}
 input, select, textarea {
-  width: 100%;
-  padding: 0.55rem 0.7rem;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-family: inherit;
+  width: 100%; padding: 0.72rem 0.9rem;
+  border: 1.5px solid var(--line); border-radius: var(--r-sm);
+  font-size: 0.95rem; font-family: inherit; color: var(--ink);
+  background: var(--cream); transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
-input:focus, select:focus, textarea:focus { outline: 2px solid var(--verde-claro); border-color: var(--verde); }
+input::placeholder, textarea::placeholder { color: #9bafa1; }
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--forest);
+  background: #fff; box-shadow: 0 0 0 4px var(--leaf-soft);
+}
 
+/* --- Tablas --- */
 table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--borde); font-size: 0.9rem; }
-th { color: var(--gris); font-weight: 600; background: var(--verde-claro); }
+th, td { text-align: left; padding: 0.7rem 0.8rem; font-size: 0.9rem; }
+th {
+  font-family: var(--font-head); color: var(--forest-700); font-weight: 600;
+  background: var(--mint); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase;
+}
+th:first-child { border-top-left-radius: var(--r-sm); }
+th:last-child { border-top-right-radius: var(--r-sm); }
+td { border-bottom: 1px solid var(--line); }
+tbody tr { transition: background 0.12s; }
+tbody tr:hover { background: var(--cream); }
 
-.badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
-.badge.SOLICITADO { background: #fff3e0; color: var(--naranja); }
-.badge.ACEPTADO { background: #e3f2fd; color: #1565c0; }
-.badge.COMPLETADO { background: var(--verde-claro); color: var(--verde-osc); }
-.badge.CANCELADO { background: #ffebee; color: var(--rojo); }
+/* --- Badges de estado --- */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.25rem 0.7rem; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 700; font-family: var(--font-head);
+  letter-spacing: 0.02em;
+}
+.badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.SOLICITADO { background: #fdf0dd; color: var(--naranja); }
+.badge.ACEPTADO { background: #e4f0fb; color: var(--azul); }
+.badge.COMPLETADO { background: var(--leaf-soft); color: var(--forest); }
+.badge.CANCELADO { background: #fbe6e3; color: var(--rojo); }
 
-.grid { display: grid; gap: 1rem; }
+/* --- Layout helpers --- */
+.grid { display: grid; gap: 1.1rem; }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-
-.stat { text-align: center; padding: 1.5rem 1rem; }
-.stat .num { font-size: 2.2rem; font-weight: 700; color: var(--verde); }
-.stat .lbl { color: var(--gris); font-size: 0.85rem; margin-top: 0.3rem; }
-
-.row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
 .spacer { flex: 1; }
-.muted { color: var(--gris); font-size: 0.85rem; }
-.error { color: var(--rojo); font-size: 0.85rem; margin-top: 0.5rem; }
-.bar-track { background: var(--verde-claro); border-radius: 6px; height: 14px; overflow: hidden; }
-.bar-fill { background: var(--verde); height: 100%; }
+
+/* --- Indicadores (stat cards) --- */
+.stat {
+  position: relative; text-align: left; padding: 1.5rem; overflow: hidden;
+}
+.stat::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 5px;
+  background: linear-gradient(180deg, var(--leaf), var(--forest));
+}
+.stat .num {
+  font-family: var(--font-head); font-size: 2.4rem; font-weight: 800;
+  color: var(--forest); line-height: 1; letter-spacing: -0.03em;
+}
+.stat .lbl {
+  color: var(--ink-soft); font-size: 0.8rem; font-weight: 600; margin-top: 0.4rem;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+/* --- Texto auxiliar --- */
+.muted { color: var(--ink-soft); font-size: 0.88rem; }
+.error {
+  color: var(--rojo); font-size: 0.86rem; margin-top: 0.6rem;
+  background: #fbe6e3; border-radius: var(--r-sm); padding: 0.5rem 0.75rem;
+}
+
+/* --- Barras de progreso (rankings) --- */
+.bar-track { background: var(--mint); border-radius: 999px; height: 12px; overflow: hidden; }
+.bar-fill { background: linear-gradient(90deg, var(--forest), var(--leaf)); height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+
+/* --- Logo (marca) --- */
+.logo { display: inline-flex; align-items: center; gap: 0.55rem; font-family: var(--font-head); font-weight: 800; }
+.logo svg { display: block; }
