@@ -170,9 +170,7 @@ import { AuthService } from './auth.service';
     @media (max-width: 880px) { .hero-grid { grid-template-columns: 1fr; } }
     .eyebrow .hl { color: var(--leaf-700); }
     .hero h1 { font-size: clamp(2.1rem, 1.2rem + 3.4vw, 3.5rem); margin-top: 0.8rem; }
-    .hero .hl { color: var(--forest); position: relative; }
-    .hero .hl::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0.08em; height: 0.32em;
-      background: var(--leaf); opacity: 0.45; border-radius: 4px; z-index: -1; }
+    .hero .hl { color: var(--forest); }
     .lead { font-size: 1.12rem; color: var(--ink-soft); max-width: 33ch; margin-top: 0.4rem; }
     .trust { margin-top: 1.4rem; font-size: 0.82rem; color: var(--ink-soft);
       background: var(--surface); border: 1px dashed var(--line); border-radius: 999px;
