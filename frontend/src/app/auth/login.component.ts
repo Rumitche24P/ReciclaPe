@@ -21,7 +21,7 @@ import { Rol } from '../core/models';
           ReciclaPe
         </a>
         <div class="bp-body">
-          <h2>Bienvenido de vuelta 🌿</h2>
+          <h2>Bienvenido de vuelta</h2>
           <p>Gestiona tus recojos y mira el impacto ambiental que generas en tu distrito.</p>
           <ul>
             <li>Programa y sigue tus recojos</li>

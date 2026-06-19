@@ -20,7 +20,7 @@ import { Rol } from '../core/models';
           ReciclaPe
         </a>
         <div class="bp-body">
-          <h2>Súmate al cambio ♻</h2>
+          <h2>Súmate al cambio</h2>
           <p>Crea tu cuenta y empieza a reciclar con propósito en tu distrito.</p>
           <ul>
             <li>Gratis para vecinos y recicladores</li>

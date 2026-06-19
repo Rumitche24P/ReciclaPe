@@ -36,7 +36,12 @@ import { AuthService } from './auth.service';
       <div class="blob blob-2"></div>
       <div class="hero-grid container">
         <div class="hero-copy">
-          <span class="eyebrow">♻ Reciclaje vecinal inteligente</span>
+          <span class="eyebrow">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a8 8 0 0 1 13-3l2.5 2.5"/><path d="M20 13a8 8 0 0 1-13 3L4.5 13.5"/><path d="M20 5v5h-5"/><path d="M4 19v-5h5"/>
+            </svg>
+            Reciclaje vecinal inteligente
+          </span>
           <h1>Convierte tus residuos<br /> en <span class="hl">impacto medible</span>.</h1>
           <p class="lead">
             ReciclaPe conecta a los vecinos con recicladores formales de su distrito.
@@ -112,7 +117,26 @@ import { AuthService } from './auth.service';
       <div class="grid grid-3">
         @for (r of roles; track r.t) {
           <div class="card role">
-            <div class="role-ic" [style.background]="r.bg">{{ r.ic }}</div>
+            <div class="role-ic" [style.background]="r.bg">
+              @switch (r.key) {
+                @case ('vecino') {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 11l9-7 9 7"/><path d="M5 10v9h5v-5h4v5h5v-9"/>
+                  </svg>
+                }
+                @case ('reciclador') {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 11a8 8 0 0 1 13-3l2.5 2.5"/><path d="M20 13a8 8 0 0 1-13 3L4.5 13.5"/>
+                    <path d="M20 5v5h-5"/><path d="M4 19v-5h5"/>
+                  </svg>
+                }
+                @case ('muni') {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 20h16"/><path d="M5 20V9l7-4 7 4v11"/><path d="M9 20v-5h6v5"/><path d="M9 11h.01M15 11h.01"/>
+                  </svg>
+                }
+              }
+            </div>
             <h3>{{ r.t }}</h3>
             <p class="muted">{{ r.d }}</p>
           </div>
@@ -218,8 +242,9 @@ import { AuthService } from './auth.service';
       box-shadow: var(--sh); }
 
     /* Roles */
-    .role-ic { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center;
-      font-size: 1.6rem; margin-bottom: 0.8rem; }
+    .role-ic { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center;
+      color: var(--forest-700); margin-bottom: 0.9rem; }
+    .role-ic svg { width: 27px; height: 27px; }
 
     /* CTA */
     .cta { position: relative; overflow: hidden; text-align: center; color: #fff;
@@ -253,8 +278,8 @@ export class HomeComponent {
   ];
 
   roles = [
-    { ic: '🏠', bg: 'var(--leaf-soft)', t: 'Vecino', d: 'Gestiona puntos de acopio, solicita recojos y sigue tu impacto personal.' },
-    { ic: '🚲', bg: 'var(--mint)', t: 'Reciclador', d: 'Recibe recojos asignados y registra los kilogramos recuperados.' },
-    { ic: '🏛️', bg: '#e4f0fb', t: 'Municipalidad', d: 'Reportes distritales y KPIs para el programa de segregación.' },
+    { key: 'vecino', bg: 'var(--leaf-soft)', t: 'Vecino', d: 'Gestiona puntos de acopio, solicita recojos y sigue tu impacto personal.' },
+    { key: 'reciclador', bg: 'var(--mint)', t: 'Reciclador', d: 'Recibe recojos asignados y registra los kilogramos recuperados.' },
+    { key: 'muni', bg: '#e4f0fb', t: 'Municipalidad', d: 'Reportes distritales y KPIs para el programa de segregación.' },
   ];
 }

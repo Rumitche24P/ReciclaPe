@@ -1,11 +1,8 @@
-/* ===========================================================================
-   ReciclaPe — Sistema de diseño
-   Identidad: eco editorial, cálida y con carácter (no genérica).
-   Tipografía: Sora (titulares) + Plus Jakarta Sans (texto).
-   =========================================================================== */
+/* Estilos globales de ReciclaPe.
+   Tipografias: Sora para titulos, Plus Jakarta Sans para el texto. */
 
 :root {
-  /* --- Paleta base --- */
+  /* Paleta */
   --ink: #11271b;          /* texto principal (verde casi negro) */
   --ink-soft: #4a6152;     /* texto secundario */
   --forest: #0e5c30;       /* primario */
