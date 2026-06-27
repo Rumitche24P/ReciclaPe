@@ -15,9 +15,10 @@ public class CorsConfig {
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter(
-            @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins:http://localhost:4200}") String origins) {
+            @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins:*}") String origins) {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(origins.split(",")));
+        // Patrones de origen: admite cualquier dominio (incluido el frontend tras un proxy HTTPS).
+        config.setAllowedOriginPatterns(List.of(origins.split(",")));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
