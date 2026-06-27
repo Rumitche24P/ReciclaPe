@@ -1,0 +1,17 @@
+# Punto unico de entrada de ReciclaPe.
+# SITE_ADDRESS:
+#   - ":80"                     -> solo HTTP, sirve con la IP publica de la VM.
+#   - "reciclape.duckdns.org"   -> HTTPS automatico (certificado Let's Encrypt).
+{$SITE_ADDRESS::80} {
+	encode gzip
+
+	# Todo lo que empiece por /api va al API Gateway (conserva la ruta completa).
+	handle /api/* {
+		reverse_proxy api-gateway:8080
+	}
+
+	# El resto lo sirve el frontend (Angular).
+	handle {
+		reverse_proxy frontend:80
+	}
+}

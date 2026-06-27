@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Variables de entorno con secretos (no subir) ###
+.env
+**/.env
+!**/.env.example
